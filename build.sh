@@ -8,6 +8,7 @@
 bash_version="4.4"
 bash_patch_level=0
 musl_version="1.1.15"
+job="-j$(cat /proc/cpuinfo | grep -c processor)"
 
 platform=$(uname -s)
 
@@ -48,7 +49,7 @@ if [ "$platform" = "Linux" ]; then
 
   pushd musl-${musl_version}
   ./configure --prefix=${install_dir}
-  make install
+  make install $job
   popd # musl-${musl-version}
 
   echo "= setting CC to musl-gcc"
@@ -63,8 +64,7 @@ echo "= building bash"
 
 pushd bash-${bash_version}
 CFLAGS="$CFLAGS -Os" ./configure --without-bash-malloc
-make
-make tests
+make $job
 popd # bash-${bash_version}
 
 popd # build
