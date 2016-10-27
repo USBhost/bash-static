@@ -55,6 +55,7 @@ if [ "$platform" = "Linux" ]; then
   echo "= setting CC to musl-gcc"
   export CC=${working_dir}/musl-install/bin/musl-gcc
   export CFLAGS="-static"
+  export LDFLAGS="-static"
 else
   echo "= WARNING: your platform does not support static binaries."
   echo "= (This is mainly due to non-static libc availability.)"
@@ -64,7 +65,7 @@ echo "= building bash"
 
 pushd bash-${bash_version}
 CFLAGS="$CFLAGS -Os" ./configure --without-bash-malloc
-make $job
+make LDFLAGS="-static" $job
 popd # bash-${bash_version}
 
 popd # build
